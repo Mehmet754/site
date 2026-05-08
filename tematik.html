@@ -256,12 +256,13 @@
     <nav class="navbar">
         <div class="container">
             <div class="logo">
-                <h1>🗺️ Türkiye İller Haritası</h1>
+                <h1>� Türkiye Tematik Haritası</h1>
                 <p>Coğrafi Bilgi Sistemi</p>
             </div>
             <ul class="nav-menu">
                 <li><a href="index.html">🏠 Ana Sayfa</a></li>
-                <li><a href="tematik.html" class="active">🗺️ İller Haritası</a></li>
+                <li><a href="tematik.html" class="active">📊 Tematik Haritalar</a></li>
+                <li><a href="nüfus.html">👥 Nüfus Verileri</a></li>
                 <li><a href="galeri.html">🖼️ Harita Galerisi</a></li>
             </ul>
         </div>
@@ -270,7 +271,7 @@
     <main>
         <div class="harita-container">
             <div class="harita-header">
-                <h1>🗺️ Türkiye İller Haritası</h1>
+                <h1>🗺️ Türkiye İdari Bölünüş Haritası</h1>
                 <p>81 ilin idari sınırları - İllere tıklayarak bilgi alın</p>
             </div>
 
@@ -307,15 +308,71 @@
         let harita, geoJsonLayer;
         let ilVerileri = {};
 
-        // İl fotoğrafları (şimdilik sadece İstanbul için)
+        // İl fotoğrafları
         const ilFotoGaleri = {
-            "34": [
+            "İstanbul": [
                 { url: "istanbul_1.jpg", aciklama: "İstanbul Boğazı" },
-                { url: "istanbul_2.jpg", aciklama: "İstanbul Boğazı" },
-                { url: "istanbul_3.jpg", aciklama: "İstanbul Boğazı" },
-                { url: "istanbul_4.jpg", aciklama: "İstanbul Boğazı" },
-                { url: "istanbul_5.jpg", aciklama: "İstanbul Boğazı" },
-        ]
+                { url: "istanbul_2.jpg", aciklama: "Ayasofya Camii" },
+                { url: "istanbul_3.jpg", aciklama: "Topkapı Sarayı" },
+                { url: "istanbul_4.jpg", aciklama: "Dolmabahçe Sarayı" },
+                { url: "istanbul_5.jpg", aciklama: "Kız Kulesi" },
+            ],
+            "Edirne": [
+                { url: "edirne_1.jpg", aciklama: "Selimiye Camii" },
+                { url: "edirne_2.jpg", aciklama: "Edirne Sarayı" },
+                { url: "edirne_3.jpg", aciklama: "Meriç Nehri" },
+                { url: "edirne_4.jpg", aciklama: "Edirne Arkeoloji Müzesi" },
+                { url: "edirne_5.jpg", aciklama: "Edirne Kalesi" },
+            ],
+            "Kırklareli": [
+                { url: "kirklareli_1.jpg", aciklama: "Dupnisa Mağarası" },
+                { url: "kirklareli_2.jpg", aciklama: "Pınarhisar Kalesi" },
+                { url: "kirklareli_3.jpg", aciklama: "Kırklareli Kent Ormanı" },
+                { url: "kirklareli_4.jpg", aciklama: "Kırklareli Arkeoloji Müzesi" },
+                { url: "kirklareli_5.jpg", aciklama: "Kırklareli Merkez Camii" },
+            ],
+            "Tekirdağ": [    
+                { url: "tekirdag_1.jpg", aciklama: "Tekirdağ Sahili" },
+                { url: "tekirdag_2.jpg", aciklama: "Rüstem Paşa Camii" },
+                { url: "tekirdag_3.jpg", aciklama: "Tekirdağ Arkeoloji Müzesi" },
+                { url: "tekirdag_4.jpg", aciklama: "Tekirdağ Bağları" },
+                { url: "tekirdag_5.jpg", aciklama: "Tekirdağ Merkez Camii" },
+            ],
+            "Çanakkale": [  
+                { url: "canakkale_1.jpg", aciklama: "Çanakkale Şehitler Abidesi" },
+                { url: "canakkale_2.jpg", aciklama: "Çanakkale Deniz Müzesi" },
+                { url: "canakkale_3.jpg", aciklama: "Çanakkale Kalesi" },
+                { url: "canakkale_4.jpg", aciklama: "Çanakkale Arkeoloji Müzesi" },
+                { url: "canakkale_5.jpg", aciklama: "Çanakkale Sahili" },
+            ],
+            "Balıkesir": [  // İl fotoğrafları
+                { url: "balikesir_1.jpg", aciklama: "Balıkesir Kalesi" },
+                { url: "balikesir_2.jpg", aciklama: "Balıkesir Arkeoloji Müzesi" },
+                { url: "balikesir_3.jpg", aciklama: "Balıkesir Sahili" },
+                { url: "balikesir_4.jpg", aciklama: "Zağnos Paşa Camii ve Külliyesi" },
+                { url: "balikesir_5.jpg", aciklama: "Balıkesir Doğa Parkı" },
+            ],
+            "Bursa": [
+                { url: "bursa_1.jpg", aciklama: "Uludağ" },
+                { url: "bursa_2.jpg", aciklama: "Ulu Camii" },
+                { url: "bursa_3.jpg", aciklama: "Bursa Kalesi" },
+                { url: "bursa_4.jpg", aciklama: "Bursa Arkeoloji Müzesi" },
+                { url: "bursa_5.jpg", aciklama: "Cumalıkızık Köyü" },
+            ],
+            "Yalova": [
+                { url: "yalova_1.jpg", aciklama: "Yalova Termal Kaplıcaları" },
+                { url: "yalova_2.jpg", aciklama: "Yalova Atatürk Köşkü" },
+                { url: "yalova_3.jpg", aciklama: "Yalova Arkeoloji Müzesi" },
+                { url: "yalova_4.jpg", aciklama: "Yalova Sahili" },
+                { url: "yalova_5.jpg", aciklama: "Yalova Doğa Parkı" },
+            ],
+            "Kocaeli": [
+                { url: "kocaeli_1.jpg", aciklama: "Kocaeli Sahili" },
+                { url: "kocaeli_2.jpg", aciklama: "Kocaeli Arkeoloji Müzesi" },
+                { url: "kocaeli_3.jpg", aciklama: "Kocaeli Doğa Parkı" },
+                { url: "kocaeli_4.jpg", aciklama: "Fevziye Camii" },
+                { url: "kocaeli_5.jpg", aciklama: "Kocaeli Kent Ormanı" },
+            ]
         };
 
         // Tüm iller TEK RENK - Açık Mavi
@@ -334,7 +391,7 @@
             const galeriDiv = document.getElementById('fotoGaleri');
             const fotoContainer = document.getElementById('fotoContainer');
             
-            const fotolar = ilFotoGaleri[plaka];
+            const fotolar = ilFotoGaleri[ilAdi];
             
             if (fotolar && fotolar.length > 0) {
                 fotoContainer.innerHTML = '';
