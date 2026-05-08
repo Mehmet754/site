@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Türkiye İller Haritası | CBS Portalı</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+        }
+
+        .navbar {
+            background: #2c3e50;
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo h1 {
+            font-size: 1.3rem;
+            color: white;
+        }
+
+        .logo p {
+            font-size: 0.7rem;
+            opacity: 0.8;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: #3498db;
+        }
+
+        .harita-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+
+        .harita-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .harita-header h1 {
+            font-size: 2rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .harita-header p {
+            color: #666;
+        }
+
+        .harita-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        #harita {
+            height: 500px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: #e8edf2;
+            z-index: 1;
+        }
+
+        .info-panel {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+            height: fit-content;
+        }
+
+        .info-panel h3 {
+            background: #2c3e50;
+            color: white;
+            padding: 1rem;
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .info-content {
+            padding: 1.2rem;
+        }
+
+        .il-bilgi-tablo {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .il-bilgi-tablo td {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .il-bilgi-tablo td:first-child {
+            font-weight: bold;
+            color: #555;
+            width: 45%;
+        }
+
+        .il-bilgi-tablo td:last-child {
+            text-align: right;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .geri-don-btn {
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        .geri-don-btn:hover {
+            background: #2980b9;
+        }
+
+        /* Fotoğraf Galerisi Bölümü */
+        .foto-galeri {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-top: 1.5rem;
+            overflow: hidden;
+        }
+
+        .foto-galeri h3 {
+            background: #2c3e50;
+            color: white;
+            padding: 1rem;
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .galeri-icerik {
+            padding: 1.2rem;
+        }
+
+        .foto-container {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding: 0.5rem;
+        }
+
+        .foto-item {
+            flex-shrink: 0;
+            width: 250px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .foto-item:hover {
+            transform: scale(1.03);
+        }
+
+        .foto-item img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+
+        .foto-item p {
+            padding: 0.5rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #555;
+            background: #f8f9fa;
+        }
+
+        .bos-mesaj {
+            text-align: center;
+            padding: 2rem;
+            color: #999;
+        }
+
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            .harita-wrapper {
+                grid-template-columns: 1fr;
+            }
+            #harita {
+                height: 400px;
+            }
+            .foto-item {
+                width: 200px;
+            }
+            .foto-item img {
+                height: 130px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <h1>🗺️ Türkiye İller Haritası</h1>
+                <p>Coğrafi Bilgi Sistemi</p>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">🏠 Ana Sayfa</a></li>
+                <li><a href="tematik.html" class="active">🗺️ İller Haritası</a></li>
+                <li><a href="galeri.html">🖼️ Harita Galerisi</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <div class="harita-container">
+            <div class="harita-header">
+                <h1>🗺️ Türkiye İller Haritası</h1>
+                <p>81 ilin idari sınırları - İllere tıklayarak bilgi alın</p>
+            </div>
+
+            <div class="harita-wrapper">
+                <div id="harita"></div>
+                <div class="info-panel">
+                    <h3>🏙️ İl Bilgileri</h3>
+                    <div id="il-bilgi" class="info-content">
+                        <p style="color: #999; text-align: center;">Haritadan bir il seçin</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fotoğraf Galerisi Bölümü -->
+            <div class="foto-galeri" id="fotoGaleri" style="display: none;">
+                <h3>📸 İl Fotoğrafları</h3>
+                <div class="galeri-icerik">
+                    <div id="fotoContainer" class="foto-container">
+                        <!-- Fotoğraflar buraya gelecek -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Coğrafya öğretiminde materyaller dersi kapsamında hazırlanmıştır</p>
+            <p style="font-size: 0.75rem; margin-top: 0.3rem;">Sürüm: V02 | Veri kaynağı: TÜİK 2025</p>
+        </div>
+    </footer>
+
+    <script>
+        let harita, geoJsonLayer;
+        let ilVerileri = {};
+
+        // İl fotoğrafları (şimdilik sadece İstanbul için)
+        const ilFotoGaleri = {
+            "34": [
+                { url: "istanbul_1.jpg", aciklama: "İstanbul Boğazı" },
+                { url: "istanbul_2.jpg", aciklama: "İstanbul Boğazı" },
+                { url: "istanbul_3.jpg", aciklama: "İstanbul Boğazı" },
+                { url: "istanbul_4.jpg", aciklama: "İstanbul Boğazı" },
+                { url: "istanbul_5.jpg", aciklama: "İstanbul Boğazı" },
+        ]
+        };
+
+        // Tüm iller TEK RENK - Açık Mavi
+        const TEK_RENK = '#5DADE2';
+
+        function haritaStili(feature) {
+            return {
+                fillColor: TEK_RENK,
+                weight: 1,
+                color: 'white',
+                fillOpacity: 0.7
+            };
+        }
+
+        function fotoGaleriGoster(plaka, ilAdi) {
+            const galeriDiv = document.getElementById('fotoGaleri');
+            const fotoContainer = document.getElementById('fotoContainer');
+            
+            const fotolar = ilFotoGaleri[plaka];
+            
+            if (fotolar && fotolar.length > 0) {
+                fotoContainer.innerHTML = '';
+                fotolar.forEach(foto => {
+                    const fotoItem = document.createElement('div');
+                    fotoItem.className = 'foto-item';
+                    fotoItem.innerHTML = `
+                        <img src="${foto.url}" alt="${foto.aciklama}" onerror="this.src='https://via.placeholder.com/250x160?text=Görsel+Yüklenemedi'">
+                        <p>📷 ${foto.aciklama}</p>
+                    `;
+                    fotoItem.onclick = () => {
+                        window.open(foto.url, '_blank');
+                    };
+                    fotoContainer.appendChild(fotoItem);
+                });
+                galeriDiv.style.display = 'block';
+            } else {
+                galeriDiv.style.display = 'none';
+            }
+        }
+
+        function ilBilgisiGoster(plaka, il, layer) {
+            const yogunluk = (il.nufus / il.yuzolcumu).toFixed(1);
+            document.getElementById('il-bilgi').innerHTML = `
+                <table class="il-bilgi-tablo">
+                    <tr><td style="padding:0.5rem 0;">Plaka Kodu：<\/td><td style="text-align:right;"><strong>${plaka}<\/strong><\/td><\/tr>
+                    <tr><td style="padding:0.5rem 0;">İl Adı：<\/td><td style="text-align:right;"><strong>${il.il}<\/strong><\/td><\/tr>
+                    <tr><td style="padding:0.5rem 0;">Nüfus (2025)：<\/td><td style="text-align:right;"><strong>${il.nufus.toLocaleString('tr-TR')}<\/strong><\/td><\/tr>
+                    <tr><td style="padding:0.5rem 0;">Yüzölçümü：<\/td><td style="text-align:right;"><strong>${il.yuzolcumu.toLocaleString('tr-TR')} km²<\/strong><\/td><\/tr>
+                    <tr><td style="padding:0.5rem 0;">Nüfus Yoğunluğu：<\/td><td style="text-align:right;"><strong>${yogunluk} kişi/km²<\/strong><\/td><\/tr>
+                <\/table>
+                <button class="geri-don-btn" onclick="harita.setView([39.0, 35.0], 6)">🗺️ Türkiye Geneline Dön<\/button>
+            `;
+            
+            // Fotoğraf galerisini göster
+            fotoGaleriGoster(plaka, il.il);
+            
+            harita.fitBounds(layer.getBounds());
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            harita = L.map('harita').setView([39.0, 35.0], 6);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; OpenStreetMap'
+            }).addTo(harita);
+
+            fetch('il.json')
+                .then(res => {
+                    if (!res.ok) throw new Error('il.json bulunamadı');
+                    return res.json();
+                })
+                .then(data => {
+                    data.features.forEach(f => {
+                        const p = f.properties;
+                        if (p && p.Plaka) {
+                            const plaka = p.Plaka.toString().padStart(2, '0');
+                            ilVerileri[plaka] = {
+                                il: p.AD || 'Bilinmiyor',
+                                nufus: parseInt(p.Nüfus) || 0,
+                                yuzolcumu: parseFloat(p.Yüz) || 0
+                            };
+                        }
+                    });
+
+                    geoJsonLayer = L.geoJSON(data, {
+                        style: haritaStili,
+                        onEachFeature: (f, l) => {
+                            const plaka = f.properties?.Plaka?.toString().padStart(2, '0');
+                            const il = ilVerileri[plaka];
+                            if (il) {
+                                l.bindTooltip(`${il.il} (${plaka})`);
+                                l.on('click', () => ilBilgisiGoster(plaka, il, l));
+                            }
+                        }
+                    }).addTo(harita);
+
+                    if (geoJsonLayer.getBounds().isValid()) {
+                        harita.fitBounds(geoJsonLayer.getBounds());
+                    }
+                })
+                .catch(error => {
+                    console.error('Hata:', error);
+                    document.getElementById('harita').innerHTML = `
+                        <div style="padding:2rem;text-align:center;background:#fff3f3;border-radius:10px;">
+                            <h3 style="color:#e74c3c;">❌ Harita Yüklenemedi</h3>
+                            <p style="margin-top:0.5rem;">${error.message}</p>
+                        </div>
+                    `;
+                });
+        });
+    </script>
+</body>
+</html>

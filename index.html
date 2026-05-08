@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Türkiye CBS Veri Portalı | Giriş</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animasyonlu arka plan */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><path d="M50 0 L100 50 L50 100 L0 50 Z" fill="white"/><circle cx="50" cy="50" r="20" fill="white"/></svg>');
+            background-size: 100px 100px;
+            animation: slide 20s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes slide {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(50px, 50px) rotate(10deg); }
+        }
+
+        .container {
+            text-align: center;
+            z-index: 1;
+            padding: 2rem;
+            max-width: 800px;
+            width: 90%;
+        }
+
+        /* Versiyon etiketi */
+        .version {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        /* Ana başlık */
+        h1 {
+            font-size: 3.5rem;
+            color: white;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: fadeInDown 1s ease;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        /* Alt başlık */
+        .subtitle {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease 0.3s both;
+            line-height: 1.6;
+        }
+
+        /* Menü Butonları */
+        .menu-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+            animation: fadeInUp 1s ease 0.6s both;
+        }
+
+        .menu-btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e3c72;
+            background: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            min-width: 180px;
+        }
+
+        .menu-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            background: #f8f9fa;
+        }
+
+        .menu-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Farklı buton renkleri */
+        .btn-tematik { background: #3498db; color: white; }
+        .btn-tematik:hover { background: #2980b9; }
+        
+        .btn-galeri { background: #27ae60; color: white; }
+        .btn-galeri:hover { background: #219a52; }
+        
+        .btn-test { background: #e74c3c; color: white; }
+        .btn-test:hover { background: #c0392b; }
+
+        /* Footer yazısı */
+        .footer-note {
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(5px);
+            width: fit-content;
+            margin: 0 auto;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 1s ease 1s both;
+        }
+
+        /* Harita ikonları */
+        .map-icons {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            animation: fadeInDown 1s ease;
+        }
+
+        .map-icon {
+            width: 70px;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            backdrop-filter: blur(5px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .map-icon:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .map-icon:nth-child(3) {
+            animation-delay: 1s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 0.9rem;
+                padding: 0 1rem;
+            }
+            
+            .menu-btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 0.9rem;
+                min-width: 140px;
+            }
+            
+            .version {
+                top: 10px;
+                right: 15px;
+                font-size: 0.7rem;
+                padding: 0.3rem 1rem;
+            }
+            
+            .footer-note {
+                font-size: 0.7rem;
+                bottom: 15px;
+            }
+            
+            .map-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+            
+            .menu-buttons {
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Versiyon etiketi -->
+    <div class="version">Sürüm: V02</div>
+
+    <!-- Ana içerik -->
+    <div class="container">
+        <!-- Harita ikonları -->
+        <div class="map-icons">
+            <div class="map-icon">🗺️</div>
+            <div class="map-icon">📍</div>
+            <div class="map-icon">🌍</div>
+        </div>
+
+        <!-- Ana başlık -->
+        <h1>TÜRKİYE CBS<br>VERİ PORTALI</h1>
+        
+        <!-- Alt başlık -->
+        <div class="subtitle">
+            Coğrafi Bilgi Sistemleri ile Türkiye'yi keşfedin<br>
+            Tematik haritalar, nüfus verileri, harita galerisi ve daha fazlası
+        </div>
+
+        <!-- Menü Butonları -->
+        <div class="menu-buttons">
+            <a href="tematik.html" class="menu-btn btn-tematik">📊 Tematik Haritalar</a>
+            <a href="nüfus.html" class="menu-btn btn-nüfus">👥 Nüfus Verileri</a>
+            <a href="galeri.html" class="menu-btn btn-galeri">🖼️ Harita Galerisi</a>
+        </div>
+    </div>
+
+    <!-- Footer notu -->
+    <div class="footer-note">
+        Coğrafya öğretiminde materyaller dersi kapsamında hazırlanmıştır
+    </div>
+
+    <script>
+        console.log('%c🗺️ TÜRKİYE CBS VERİ PORTALI v02', 'font-size: 18px; color: #fff; font-weight: bold; background: #1e3c72; padding: 5px; border-radius: 5px;');
+        console.log('%cCoğrafya öğretiminde materyaller dersi kapsamında hazırlanmıştır', 'font-size: 12px; color: #2a5298;');
+        console.log('%c🔍 Tematik Haritalar, Harita Galerisi ve Testler bölümlerini keşfedin!', 'font-size: 14px; color: #27ae60;');
+    </script>
+</body>
+</html>
